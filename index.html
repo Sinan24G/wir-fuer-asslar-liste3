@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team-Umfrage 2025</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .form-container h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Team-Umfrage 2025</h1>
+    </header>
+
+    <div class="form-container">
+        <h2>Teile deine Ideen und Ziele</h2>
+        <form id="survey-form">
+            <label for="personalGoals">Persönliche Ziele:</label>
+            <input type="text" id="personalGoals" placeholder="Z. B.: Mehr sparen, gesund leben">
+
+            <label for="skills">Fähigkeiten, die du entwickeln möchtest:</label>
+            <input type="text" id="skills" placeholder="Z. B.: Programmieren, Sprachen">
+
+            <label for="financialGoals">Finanzielle Ziele:</label>
+            <input type="text" id="financialGoals" placeholder="Z. B.: 10.000 Euro sparen">
+
+            <label for="teamGoals">Teamziele:</label>
+            <textarea id="teamGoals" placeholder="Gemeinsame Ziele für das Team"></textarea>
+
+            <label for="rules">Regeln/Vorsätze:</label>
+            <textarea id="rules" placeholder="Z. B.: Kein Alkohol, Pünktlichkeit"></textarea>
+
+            <label for="feedback">Feedback:</label>
+            <textarea id="feedback" placeholder="Dein Feedback oder Ideen"></textarea>
+
+            <button type="submit">Absenden</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('survey-form');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const personalGoals = document.getElementById('personalGoals').value;
+            const skills = document.getElementById('skills').value;
+            const financialGoals = document.getElementById('financialGoals').value;
+            const teamGoals = document.getElementById('teamGoals').value;
+            const rules = document.getElementById('rules').value;
+            const feedback = document.getElementById('feedback').value;
+
+            const data = {
+                personalGoals,
+                skills,
+                financialGoals,
+                teamGoals,
+                rules,
+                feedback
+            };
+
+            try {
+                const response = await fetch("https://api.github.com/repos/Sinan24G/Team-Umfrage-2025/contents/data.json", {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${atob("Z2hwX2xFRVRTalJXbjBuT0xTcGZXQ1d2a0dNajF0cDh4UDE5YlFiVw==")}`,
+                        "Content-Type": "application/json",
+                        "Accept": "application/vnd.github.v3+json"
+                    },
+                    body: JSON.stringify({
+                        message: "Update data.json",
+                        content: btoa(JSON.stringify([data], null, 2)),
+                        sha: null // Lege den `sha`-Wert fest, falls der Fehler weiterhin besteht.
+                    })
+                });
+
+                if (response.ok) {
+                    message.textContent = "Daten erfolgreich gespeichert!";
+                    message.style.color = "green";
+                    form.reset();
+                } else {
+                    throw new Error(`Fehler beim Speichern: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("Fehler:", error);
+                message.textContent = "Ein Fehler ist aufgetreten. Bitte versuche es erneut.";
+                message.style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
